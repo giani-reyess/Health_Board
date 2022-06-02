@@ -1,0 +1,10 @@
+/*
+    This file load the variables needed to execute a migrations in terminal
+    so we dont have to do it manually
+*/
+module.exports = {
+    'config': './db/config.js',
+    'models-path': '/db/models/',
+    'migrations-path': './db/migrations/',
+    'seeders-path': './db/migrations/'
+}
