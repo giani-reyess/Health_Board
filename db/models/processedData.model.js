@@ -1,55 +1,54 @@
 const { Model, DataTypes, Sequelize } = require('sequelize')
-const { USER_TABLE } = require('./users.model')
+const { RAW_DATA_TABLE } = require('./rawData.model')
 
-const RAW_DATA_TABLE = 'raw_data'
+const PROCESSED_DATA = 'process_data'
 
 // Table shape
-const RawDataSchema = {
+const ProcessedDataSchema = {
     id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: DataTypes.INTEGER
     },
-    weight: {
+    leanBodyMass: {
         allowNull: false,
         type: DataTypes.FLOAT
     },
-    height: {
+    bodyMassIndex: {
         allowNull: false,
         type: DataTypes.FLOAT,
     },
-    userId: {
+    bodyFatPercentage: {
         allowNull: false,
         field: 'user_id',
-        type: DataTypes.INTEGER,
-        references: {
-            model: USER_TABLE,
-            key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
+        type: DataTypes.FLOAT,
     },
-    createdAt: {
+    basalMetabolicRate: {
         allowNull: false,
         type: DataTypes.DATE,
         field: 'created_at',
         defaultValue: Sequelize.NOW
+    },
+    rawDataId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        references: {
+            model: RAW_DATA_TABLE,
+            key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL'
     }
 }
 
 // API to interact with the db
-class RawData extends Model {
+class ProcessedData extends Model {
 
     static associate(models) {
-        // A rawData input can belong to only one user (N-User: 1-RawData)
-        this.belongsTo(models.User, {
-            as: 'user'
-        })
-
-        // Every rawData input has its own processedData output (1-RawData: 1-processedData)  
-        this.hasOne(models.ProcessedData, {
-            as: 'processedData'
+        // Every rawData input has its own processedData output (1-RawData: 1-processedData) 
+        this.belongsTo(models.RawData, {
+            as: 'rawData'
         })
     }
 
@@ -57,10 +56,10 @@ class RawData extends Model {
         return {
             sequelize,
             tableName: RAW_DATA_TABLE,
-            modelName: 'RawData',
+            modelName: 'ProcessedData',
             timestamps: false
         }
     }
 }
 
-module.exports = { RAW_DATA_TABLE, RawDataSchema, RawData }
+module.exports = { PROCESSED_DATA, ProcessedDataSchema, ProcessedData }
