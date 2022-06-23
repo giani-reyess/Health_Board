@@ -1,13 +1,16 @@
-const express = require('express');
+const express = require('express')
 
-const RawData = require('../services/rawdata.service');
-const validatorHandler = require('../middlewares/validatorHandler');
+const ProcessedData = require('../services/processeData.service')
+const RawDataService = require('../services/rawData.service')
+const validatorHandler = require('../middlewares/validatorHandler')
 const {
     createRawDataSchema,
     getRawDataSchema
 } = require('../schemas/rawData.schema');
 
 const router = express.Router()
+
+const calculate = new ProcessedData()
 const service = new RawDataService()
 
 router.get('/', async(req, res, next) => {
@@ -24,8 +27,8 @@ router.get('/:id',
     async(req, res, next) => {
         try {
             const { id } = req.params
-            const user = await service.findOne(id)
-            res.json(user)
+            const data = await service.findOne(id)
+            res.json(data)
         } catch (error) {
             next(error)
         }
@@ -36,9 +39,16 @@ router.post('/',
     validatorHandler(createRawDataSchema, 'body'),
     async(req, res, next) => {
         try {
-            const body = req.body;
-            const newUser = await service.create(body);
-            res.status(201).json(newUser)
+            const body = req.body
+
+            // Save raw_data 
+            const newDataInput = await service.create(body)
+
+            // Save and calculate body parameters using raw_data 
+            // const newProcessedData = await calculate.create(body)
+
+            res.status(201).json(newDataInput)
+                // res.status(201).json(newProcessedData)
         } catch (error) {
             next(error)
         }

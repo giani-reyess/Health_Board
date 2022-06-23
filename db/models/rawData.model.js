@@ -31,7 +31,7 @@ const RawDataSchema = {
         onDelete: 'SET NULL'
     },
     createdAt: {
-        allowNull: false,
+        allowNull: true,
         type: DataTypes.DATE,
         field: 'created_at',
         defaultValue: Sequelize.NOW

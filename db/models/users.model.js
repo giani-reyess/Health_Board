@@ -22,13 +22,12 @@ const UserSchema = {
         allowNull: false,
         type: DataTypes.STRING,
         validate: {
-            min: 12,
-            max: 38
+            min: 12
         }
     },
     birthDate: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         field: 'birth_date'
             // calculate age
     },
@@ -38,7 +37,7 @@ const UserSchema = {
     },
     createdAt: {
         allowNull: false,
-        type: DataTypes.DATE,
+        type: DataTypes.DATEONLY,
         field: 'created_at',
         defaultValue: Sequelize.NOW
     }

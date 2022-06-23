@@ -1,5 +1,8 @@
 const express = require('express')
-const usersRouter = require('./users.router')
+
+const UsersRouter = require('./users.router')
+const RawData = require('./rawData.router')
+const ProcessedData = require('./processedData.router')
 
 // Middleware router object
 const routerApi = app => {
@@ -9,7 +12,9 @@ const routerApi = app => {
     app.use("/", route)
 
     // Routes stack
-    route.use("/users", usersRouter)
+    route.use("/users", UsersRouter)
+    route.use("/raw-data", RawData)
+    route.use("/processed-data", ProcessedData)
 }
 
 module.exports = routerApi
