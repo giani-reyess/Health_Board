@@ -6,7 +6,7 @@ const validatorHandler = require('../middlewares/validatorHandler')
 const {
     createRawDataSchema,
     getRawDataSchema
-} = require('../schemas/rawData.schema');
+} = require('../schemas/rawData.schema')
 
 const router = express.Router()
 
@@ -20,7 +20,7 @@ router.get('/', async(req, res, next) => {
     } catch (error) {
         next(error)
     }
-});
+})
 
 router.get('/:id',
     validatorHandler(getRawDataSchema, 'params'),
@@ -67,6 +67,6 @@ router.delete('/:id',
             next(error)
         }
     }
-);
+)
 
 module.exports = router

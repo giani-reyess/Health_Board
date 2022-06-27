@@ -1,7 +1,6 @@
 const boom = require('@hapi/boom')
 const { models } = require('./../libs/sequelize')
 
-
 class RawDataService {
     constructor() {}
 
@@ -13,7 +12,9 @@ class RawDataService {
 
     // Get all the rawData input 
     async find() {
-        const data = await models.RawData.findAll();
+        const data = await models.RawData.findAll({
+            include: ['user']
+        });
         return data
     }
 

@@ -12,7 +12,9 @@ class UserService {
 
     // Get all the users along its costumers
     async find() {
-        const data = await models.User.findAll();
+        const data = await models.User.findAll({
+            include: ['rawdata']
+        })
         return data
     }
 
