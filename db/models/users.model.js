@@ -29,7 +29,6 @@ const UserSchema = {
         allowNull: false,
         type: DataTypes.DATEONLY,
         field: 'birth_date'
-            // calculate age
     },
     sex: {
         allowNull: false,

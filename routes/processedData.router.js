@@ -1,26 +1,20 @@
 const express = require('express')
 
-const ProcessedData = require('../services/processeData.service')
-const validatorHandler = require('../middlewares/validatorHandler')
-const {
-    createRawDataSchema,
-    getRawDataSchema
-} = require('../schemas/rawData.schema');
+const ProcessedData = require('../services/processedData.service')
 
 const router = express.Router()
 const service = new ProcessedData()
 
 router.get('/', async(req, res, next) => {
     try {
-        const users = await service.find()
-        res.json(users)
+        const data = await service.find()
+        res.json(data)
     } catch (error) {
         next(error)
     }
-});
+})
 
 router.get('/:id',
-    validatorHandler(getRawDataSchema, 'params'),
     async(req, res, next) => {
         try {
             const { id } = req.params
@@ -33,7 +27,6 @@ router.get('/:id',
 )
 
 router.post('/',
-    validatorHandler(createRawDataSchema, 'body'),
     async(req, res, next) => {
         try {
             const body = req.body
@@ -47,7 +40,6 @@ router.post('/',
 
 
 router.delete('/:id',
-    validatorHandler(getRawDataSchema, 'params'),
     async(req, res, next) => {
         try {
             const { id } = req.params
@@ -57,6 +49,6 @@ router.delete('/:id',
             next(error)
         }
     }
-);
+)
 
 module.exports = router

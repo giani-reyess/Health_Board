@@ -1,6 +1,5 @@
 const express = require('express')
 
-const ProcessedData = require('../services/processeData.service')
 const RawDataService = require('../services/rawData.service')
 const validatorHandler = require('../middlewares/validatorHandler')
 const {
@@ -10,7 +9,6 @@ const {
 
 const router = express.Router()
 
-const calculate = new ProcessedData()
 const service = new RawDataService()
 
 router.get('/', async(req, res, next) => {
@@ -40,15 +38,11 @@ router.post('/',
     async(req, res, next) => {
         try {
             const body = req.body
-
-            // Save raw_data 
+                // Save raw_data 
             const newDataInput = await service.create(body)
-
-            // Save and calculate body parameters using raw_data 
-            // const newProcessedData = await calculate.create(body)
-
+                // Redirect data to '/processed-data' 
             res.status(201).json(newDataInput)
-                // res.status(201).json(newProcessedData)
+            res.redirect(307, '/processed-data')
         } catch (error) {
             next(error)
         }

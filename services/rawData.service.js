@@ -14,7 +14,7 @@ class RawDataService {
     async find() {
         const data = await models.RawData.findAll({
             include: ['user']
-        });
+        })
         return data
     }
 

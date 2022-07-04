@@ -1,7 +1,7 @@
 const { Model, DataTypes, Sequelize } = require('sequelize')
 const { RAW_DATA_TABLE } = require('./rawData.model')
 
-const PROCESSED_DATA = 'process_data'
+const PROCESSED_DATA = 'processed_data'
 
 // Table shape
 const ProcessedDataSchema = {
@@ -13,26 +13,28 @@ const ProcessedDataSchema = {
     },
     leanBodyMass: {
         allowNull: false,
-        type: DataTypes.FLOAT
+        type: DataTypes.FLOAT,
+        field: 'lean_body_mass'
     },
     bodyMassIndex: {
         allowNull: false,
         type: DataTypes.FLOAT,
+        field: 'body_mass_index'
     },
     bodyFatPercentage: {
         allowNull: false,
-        field: 'user_id',
+        field: 'body_fat_percentage',
         type: DataTypes.FLOAT,
     },
     basalMetabolicRate: {
         allowNull: false,
-        type: DataTypes.DATE,
-        field: 'created_at',
-        defaultValue: Sequelize.NOW
+        type: DataTypes.FLOAT,
+        field: 'basal_metabolic_rate',
     },
-    rawDataId: {
+    rawdataId: {
         type: DataTypes.INTEGER,
         allowNull: false,
+        field: 'raw_data_id',
         references: {
             model: RAW_DATA_TABLE,
             key: 'id'
@@ -48,14 +50,14 @@ class ProcessedData extends Model {
     static associate(models) {
         // Every rawData input has its own processedData output (1-RawData: 1-processedData) 
         this.belongsTo(models.RawData, {
-            as: 'rawData'
+            as: 'rawdata'
         })
     }
 
     static config(sequelize) {
         return {
             sequelize,
-            tableName: RAW_DATA_TABLE,
+            tableName: PROCESSED_DATA,
             modelName: 'ProcessedData',
             timestamps: false
         }
