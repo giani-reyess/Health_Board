@@ -3,7 +3,6 @@ const express = require('express')
 const corsMiddleware = require('cors')
 const routerApi = require('./routes')
 const {
-    logError,
     errorHandler,
     boomErrorHandler,
     ormErrorHandler

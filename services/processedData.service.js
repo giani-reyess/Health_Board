@@ -8,8 +8,27 @@ class ProcessedData {
 
     // Create new processedData inputs
     async create(data) {
-        // Calculate body parameters
-        const calculatedData = Calculator.calculateAll(data)
+
+        // Find the user that made the POST request
+        const userData = models.User.findOne({
+            where: { id: data.userId }
+        })
+
+        // Calculate age from user birth date
+        const currentDate = new Date()
+        const userDate = new Date(userData.birthDate)
+        const age = currentDate.getFullYear() - userDate.getFullYear()
+
+        // Gather needed data in an object
+        const postObject = {
+            height: data.height,
+            weight: data.weight,
+            age: age,
+            sex: userData.sex
+        }
+
+        // Calculate data
+        const calculatedData = Calculator.calculateAll(postObject)
 
         const newData = await models.ProcessedData.create(calculatedData)
         return newData

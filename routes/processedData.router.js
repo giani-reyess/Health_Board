@@ -29,8 +29,15 @@ router.get('/:id',
 router.post('/',
     async(req, res, next) => {
         try {
-            const body = req.body
-            const newDataInput = await service.create(body)
+            const { height, weight, userId } = req.body
+
+            let dataObject = {
+                height: height,
+                weight: weight,
+                userid: userId
+            }
+
+            const newDataInput = await service.create(dataObject)
             res.status(201).json(newDataInput)
         } catch (error) {
             next(error)

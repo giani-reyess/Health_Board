@@ -40,9 +40,7 @@ router.post('/',
             const body = req.body
                 // Save raw_data 
             const newDataInput = await service.create(body)
-                // Redirect data to '/processed-data' 
             res.status(201).json(newDataInput)
-            res.redirect(307, '/processed-data')
         } catch (error) {
             next(error)
         }
