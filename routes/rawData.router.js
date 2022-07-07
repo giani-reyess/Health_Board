@@ -1,6 +1,7 @@
 const express = require('express')
 
 const RawDataService = require('../services/rawData.service')
+const ProcessedDataService = require('../services/processedData.service')
 const validatorHandler = require('../middlewares/validatorHandler')
 const {
     createRawDataSchema,
@@ -9,11 +10,12 @@ const {
 
 const router = express.Router()
 
-const service = new RawDataService()
+const ProcessedData = new ProcessedDataService()
+const RawData = new RawDataService()
 
 router.get('/', async(req, res, next) => {
     try {
-        const users = await service.find()
+        const users = await RawData.find()
         res.json(users)
     } catch (error) {
         next(error)
@@ -25,7 +27,7 @@ router.get('/:id',
     async(req, res, next) => {
         try {
             const { id } = req.params
-            const data = await service.findOne(id)
+            const data = await RawData.findOne(id)
             res.json(data)
         } catch (error) {
             next(error)
@@ -37,10 +39,20 @@ router.post('/',
     validatorHandler(createRawDataSchema, 'body'),
     async(req, res, next) => {
         try {
+            // Save raw_data 
             const body = req.body
-                // Save raw_data 
-            const newDataInput = await service.create(body)
-            res.status(201).json(newDataInput)
+            const newDataInput = await RawData.create(body)
+
+            // Create processed data
+            const { height, weight, userId } = req.body
+
+            let dataObject = {
+                height: height,
+                weight: weight,
+                userid: userId
+            }
+            const newProcessedData = await ProcessedData.create(dataObject)
+            res.status(201).json(newDataInput, newProcessedData)
         } catch (error) {
             next(error)
         }

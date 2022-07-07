@@ -1,6 +1,8 @@
 const boom = require('@hapi/boom')
 const { models } = require('../libs/sequelize')
+const { QueryTypes } = require('sequelize')
 const Calculator = require('../utils/calculator')
+const sequelize = require('../libs/sequelize')
 
 
 class ProcessedData {
@@ -9,27 +11,34 @@ class ProcessedData {
     // Create new processedData inputs
     async create(data) {
 
-        // Find the user that made the POST request
-        const userData = models.User.findOne({
-            where: { id: data.userId }
-        })
+        // Get the field "birthDate" from the user with the given id
+        const [userDate] = await sequelize.query(
+            'SELECT birth_date FROM users WHERE id = ?', {
+                replacements: [data.userid],
+                type: QueryTypes.SELECT
+            })
+
+        console.log(userDate)
+
+        // Get the field "sex" from the user with the given id
+        const [userSex] = await sequelize.query(
+            'SELECT sex FROM users WHERE id = ?', {
+                replacements: [data.userid],
+                type: QueryTypes.SELECT
+            })
+
 
         // Calculate age from user birth date
         const currentDate = new Date()
-        const userDate = new Date(userData.birthDate)
-        const age = currentDate.getFullYear() - userDate.getFullYear()
+        const userBirthDate = new Date(Object.values(userDate))
+        const age = currentDate.getFullYear() - userBirthDate.getFullYear()
+        console.log(currentDate, userDate, age)
 
-        // Gather needed data in an object
-        const postObject = {
-            height: data.height,
-            weight: data.weight,
-            age: age,
-            sex: userData.sex
-        }
+        let stringUserSex = (Object.values(userSex)).toString()
 
         // Calculate data
-        const calculatedData = Calculator.calculateAll(postObject)
-
+        const calculatedData = Calculator.calculateAll(data.height, data.weight, age, stringUserSex)
+        console.log(calculatedData)
         const newData = await models.ProcessedData.create(calculatedData)
         return newData
     }

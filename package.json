@@ -10,7 +10,8 @@
         "postgres-cli": "docker-compose exec postgres bash",
         "migration:generate": "sequelize-cli migration:generate --name",
         "migrations:run": "sequelize-cli db:migrate",
-        "migrations:revert": "sequelize-cli db:migrate:undo"
+        "migrations:revert": "sequelize-cli db:migrate:undo",
+        "SHINZOU-WO-SASAGEYO": "docker-compose up -d postgres ; code . ; nodemon index.js"
     },
     "keywords": [],
     "author": "",
