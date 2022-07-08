@@ -18,8 +18,6 @@ class ProcessedData {
                 type: QueryTypes.SELECT
             })
 
-        console.log(userDate)
-
         // Get the field "sex" from the user with the given id
         const [userSex] = await sequelize.query(
             'SELECT sex FROM users WHERE id = ?', {
@@ -27,6 +25,17 @@ class ProcessedData {
                 type: QueryTypes.SELECT
             })
 
+
+        const [lastRawdataId] = await sequelize.query(
+            'SELECT id FROM raw_data ORDER BY id DESC LIMIT 1', {
+                replacements: [data.userid],
+                type: QueryTypes.SELECT
+            })
+
+
+        const rawdataId = parseInt(Object.values(lastRawdataId))
+
+        console.log(rawdataId)
 
         // Calculate age from user birth date
         const currentDate = new Date()
@@ -36,10 +45,18 @@ class ProcessedData {
 
         let stringUserSex = (Object.values(userSex)).toString()
 
-        // Calculate data
-        const calculatedData = Calculator.calculateAll(data.height, data.weight, age, stringUserSex)
-        console.log(calculatedData)
-        const newData = await models.ProcessedData.create(calculatedData)
+        // Calculate body parameters
+        const calc = new Calculator(data.height, data.weight, age, stringUserSex)
+        const calculatedData = calc.calculateAll()
+
+        const ObjectToPost = {
+            ...calculatedData,
+            rawdataId
+        }
+
+        console.log(calculatedData, ObjectToPost)
+
+        const newData = await models.ProcessedData.create(ObjectToPost)
         return newData
     }
 
